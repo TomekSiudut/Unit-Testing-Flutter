@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebaseUnitTests/screens/error_screen.dart';
+import 'package:firebaseUnitTests/screens/home_screen.dart';
 import 'package:firebaseUnitTests/screens/loading_screen.dart';
+import 'package:firebaseUnitTests/screens/login_screen.dart';
 import 'package:firebaseUnitTests/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +18,23 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initialization,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return ErrorScreen();
-        }
+    return MaterialApp(
+      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+      home: FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorScreen();
+          }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Root();
-        }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Root();
+          }
 
-        return LoadingScreen();
-      },
+          return LoadingScreen();
+        },
+      ),
     );
   }
 }
@@ -51,11 +57,9 @@ class _RootState extends State<Root> {
         builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.data?.uid == null) {
-              // login screen
-
+              return LoginScreen(auth: _auth, firestore: _firestore);
             } else {
-              // home screen
-
+              return HomeScreen(auth: _auth, firestore: _firestore);
             }
           } else {
             return LoadingScreen();

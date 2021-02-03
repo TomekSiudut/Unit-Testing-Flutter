@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import "../services/auth.dart";
 import "package:flutter/material.dart";
 
 class LoginScreen extends StatefulWidget {
@@ -37,7 +38,33 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _passwordController,
                         ),
                         const SizedBox(height: 20.0),
-                        RaisedButton(onPressed: () async {}, child: const Text("Create Account"))
+                        RaisedButton(
+                            onPressed: () async {
+                              final String logValue = await Auth(auth: widget.auth)
+                                  .login(email: _emailController.text, password: _passwordController.text);
+                              if (logValue == "Sucess") {
+                                _emailController.clear();
+                                _passwordController.clear();
+                              } else {
+                                Scaffold.of(context).showSnackBar(SnackBar(content: Text(logValue)));
+                              }
+                            },
+                            child: const Text("Login")),
+                        FlatButton(
+                            onPressed: () async {
+                              final String regValue = await Auth(auth: widget.auth)
+                                  .createAccount(email: _emailController.text, password: _passwordController.text);
+
+                              if (regValue == "Sucess") {
+                                _emailController.clear();
+                                _passwordController.clear();
+                              } else {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(regValue),
+                                ));
+                              }
+                            },
+                            child: const Text("Create Account"))
                       ],
                     );
                   },
