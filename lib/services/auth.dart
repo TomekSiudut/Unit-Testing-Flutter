@@ -20,7 +20,7 @@ class Auth {
 
   Future<String> login({String email, String password}) async {
     try {
-      await auth.signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
       return "Sucess";
     } on FirebaseAuthException catch (e) {
       return e.message;

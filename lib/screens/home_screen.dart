@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebaseUnitTests/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
+import "../services/auth.dart";
 
 class HomeScreen extends StatefulWidget {
   final FirebaseAuth auth;
@@ -21,7 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.exit_to_app),
-            onPressed: () {},
+            onPressed: () async {
+              Auth(auth: widget.auth).signOut();
+            },
           )
         ],
       ),
